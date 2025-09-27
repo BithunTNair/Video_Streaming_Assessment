@@ -42,8 +42,6 @@ ffmpeg -i public/raw_videos/sample.mp4 \
 
 Never commit keys or video files to GitHub.
 
-.mp4, .ts, .m3u8 files are large and should be generated locally.
-
 enc.key and enc.keyinfo are sensitive — they are in .gitignore.
 
 Instead, provide instructions (as above) to generate them locally.
