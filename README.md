@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Current Status
 
-## Getting Started
+This project currently implements the **core functionality** of the assignment:
 
-First, run the development server:
+-  **Authentication**
+  - JWT-based signup and login
+  - JSON Web Token (JWT) verification middleware
+  - Function for generating signed URLs and access tokens
+-  **Video Handling**
+  - Video catalog page with thumbnails
+  - Video playback using **Video.js** (HLS)
+-  **Encryption**
+  - Implemented AES-128 HLS encryption using `ffmpeg` commands
+  - Key file and `.m3u8` playlist generation
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Limitations / Pending Improvements
+-  Security system is **basic** — needs improvements like token expiration handling, key rotation, and stricter authorization checks.
+-  Signed URL validation could be hardened for production.
+-  Error handling and refresh token mechanism not yet implemented.
+-  Analytics & watermark system not fully added.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+FFmpeg Commands
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+To generate encrypted HLS segments:
 
-## Learn More
+# Create key and keyinfo
+echo "public/videos/enc.key" > public/videos/enc.keyinfo
+echo "public/videos/enc.key" >> public/videos/enc.keyinfo
+echo "http://localhost:3000/api/keys" >> public/videos/enc.keyinfo
 
-To learn more about Next.js, take a look at the following resources:
+# Convert and encrypt video
+ffmpeg -i public/raw_videos/sample.mp4 \
+  -hls_time 10 \
+  -hls_key_info_file public/videos/enc.keyinfo \
+  -hls_playlist_type vod \
+  -hls_segment_filename "public/videos/segment%03d.ts" \
+  public/videos/output.m3u8
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+ Security Notes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Never commit keys or video files to GitHub.
 
-## Deploy on Vercel
+.mp4, .ts, .m3u8 files are large and should be generated locally.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+enc.key and enc.keyinfo are sensitive — they are in .gitignore.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Instead, provide instructions (as above) to generate them locally.
+
+
+The project currently demonstrates ~80–85% of the full requirements.

@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Video files and generated segments
+/public/videos/*
+/public/hls/*
+*.mp4
+*.ts
+*.m3u8
+
+# Encryption keys
+*.key
+*.keyinfo
+
